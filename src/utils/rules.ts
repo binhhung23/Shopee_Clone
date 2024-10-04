@@ -1,4 +1,4 @@
-import type { RegisterOptions } from 'react-hook-form'
+import type { RegisterOptions, UseFormGetValues } from 'react-hook-form'
 
 interface FormData {
   email: string
@@ -9,7 +9,7 @@ interface FormData {
 type Rules = {
   [key in keyof FormData]?: RegisterOptions<FormData, key>
 }
-export const rules: Rules = {
+export const getRules = (getValues?: UseFormGetValues<any>): Rules => ({
   email: {
     required: {
       value: true,
@@ -54,8 +54,13 @@ export const rules: Rules = {
     minLength: {
       value: 6,
       message: 'Độ dài tự 6 - 160 ký tự'
-    }
+    },
+    validate:
+      typeof getValues === 'function'
+        ? (value: string) => {
+            if (value === getValues('password')) return true
+            return 'Xác nhận password Không đúng!'
+          }
+        : undefined
   }
-}
-
-rules.email
+})

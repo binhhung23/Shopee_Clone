@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
-import { rules } from 'src/utils/rules'
+import { getRules } from 'src/utils/rules'
 
 interface FormData {
   email: string
@@ -12,9 +12,17 @@ export default function Register() {
   const {
     register,
     handleSubmit,
+    watch,
+    getValues,
     formState: { errors }
   } = useForm<FormData>()
-  const onSubmit = handleSubmit((data) => {})
+  const rules = getRules(getValues)
+  const onSubmit = handleSubmit(
+    (data) => {},
+    (data) => {
+      const password = getValues('password')
+    }
+  )
   return (
     <div className='bg-orange'>
       <div className='max-w-7xl mx-auto px-4'>
