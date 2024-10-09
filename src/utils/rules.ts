@@ -9,7 +9,7 @@ interface FormData {
 type Rules = {
   [key in keyof FormData]?: RegisterOptions<FormData, key>
 }
-export const getRules = (getValues?: UseFormGetValues<any>): Rules => ({
+export const getRules = (getValues?: UseFormGetValues<FormData>): Rules => ({
   email: {
     required: {
       value: true,
@@ -55,12 +55,10 @@ export const getRules = (getValues?: UseFormGetValues<any>): Rules => ({
       value: 6,
       message: 'Độ dài tự 6 - 160 ký tự'
     },
-    validate:
-      typeof getValues === 'function'
-        ? (value: string) => {
-            if (value === getValues('password')) return true
-            return 'Xác nhận password Không đúng!'
-          }
-        : undefined
+    validate: getValues
+      ? (value: string) => {
+          return value === getValues('password') || 'Xác nhận password Không đúng!'
+        }
+      : undefined
   }
 })
